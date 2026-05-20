@@ -8,7 +8,7 @@
 #
 # Wraps SchemaCrawler 17.11.0 with:
 #   - A FastAPI REST API (POST /crawl, GET /health)
-#   - A GraalVM JavaScript catalog walker (emit-atlas.js v1.2) that
+#   - A GraalVM JavaScript catalog walker (emit-atlas.js v1.3) that
 #     produces Atlas-canonical full-fidelity JSON in a single pass
 #   - JDBC drivers for PostgreSQL, MariaDB/MySQL, and MS SQL Server
 #     (all permissively licensed, redistributable)
@@ -20,13 +20,13 @@
 #
 # Build:
 #   docker compose build                          # via compose
-#   docker buildx build -t ghcr.io/itera/atlas-schema-extractor:1.2.0 .
+#   docker buildx build -t ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0 .
 #   docker buildx build --platform linux/amd64,linux/arm64 -t ... .   # multi-arch
 #
 # Run:
 #   docker compose up        # or:
 #   docker run --rm -p 127.0.0.1:8081:8081 \
-#     ghcr.io/itera/atlas-schema-extractor:1.2.0
+#     ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 # ─────────────────────────────────────────────────────────────────────
 
 FROM python:3.12-slim-bookworm
@@ -35,12 +35,12 @@ FROM python:3.12-slim-bookworm
 LABEL org.opencontainers.image.title="Atlas Schema Extractor"
 LABEL org.opencontainers.image.description="Self-service schema extraction for Atlas Data Fabric. Wraps SchemaCrawler with a REST API and a full-fidelity JSON catalog walker."
 LABEL org.opencontainers.image.authors="Itera ASA <atlas@itera.com>"
-LABEL org.opencontainers.image.url="https://www.itera.com/atlas"
-LABEL org.opencontainers.image.documentation="https://www.itera.com/atlas"
-LABEL org.opencontainers.image.source="https://github.com/itera/atlas-schema-extractor"
+LABEL org.opencontainers.image.url="https://github.com/carheart/schemacrawler-atlas-data-fabric"
+LABEL org.opencontainers.image.documentation="https://github.com/carheart/schemacrawler-atlas-data-fabric"
+LABEL org.opencontainers.image.source="https://github.com/carheart/schemacrawler-atlas-data-fabric"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 LABEL org.opencontainers.image.vendor="Itera ASA"
-LABEL org.opencontainers.image.version="1.2.0"
+LABEL org.opencontainers.image.version="1.3.0"
 
 # ── System dependencies ───────────────────────────────────────────────
 # default-jre-headless: runs SchemaCrawler (OpenJDK, GPLv2 + Classpath Exception)

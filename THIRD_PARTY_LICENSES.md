@@ -55,7 +55,7 @@ container with a modified version of your own by mounting a replacement JAR:
 docker run --rm \
   -v ./my-custom-mariadb-jdbc.jar:/opt/schemacrawler/lib/mariadb-java-client.jar:ro \
   -p 127.0.0.1:8081:8081 \
-  ghcr.io/itera/atlas-schema-extractor:1.2.0
+  ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 ```
 
 ## JDBC drivers (opt-in)

@@ -1,6 +1,6 @@
 # Atlas Schema Extractor
 
-**Self-service schema extraction for [Atlas Data Fabric](https://www.itera.com/atlas).**
+**Self-service schema extraction for Atlas Data Fabric.**
 
 A standalone Docker container that connects to your database, walks its full
 schema — tables, columns, foreign keys, indexes, triggers, constraints,
@@ -18,17 +18,17 @@ Itera or any other third party.
 
 ```bash
 # 1. Pull the image
-docker pull ghcr.io/itera/atlas-schema-extractor:1.2.0
+docker pull ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 
 # 2. Run it (binds to localhost only by default)
 docker run --rm -d --name atlas-extractor \
   -p 127.0.0.1:8081:8081 \
-  ghcr.io/itera/atlas-schema-extractor:1.2.0
+  ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 
 # If port 8081 is already taken on your host, pick another port:
 #   docker run --rm -d --name atlas-extractor \
 #     -p 127.0.0.1:8091:8081 \
-#     ghcr.io/itera/atlas-schema-extractor:1.2.0
+#     ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 # Then use http://127.0.0.1:8091 in step 4 below.
 
 # 3. Wait a couple of seconds for it to start
@@ -117,7 +117,7 @@ Then start (or restart) the extractor with the driver mounted into SC's `lib/`:
 docker run --rm -d --name atlas-schema-extractor \
   -p 127.0.0.1:8091:8081 \
   -v "$(pwd)/db2jcc4.jar:/opt/schemacrawler/lib/db2jcc4.jar:ro" \
-  ghcr.io/itera/atlas-schema-extractor:1.2.0
+  ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 ```
 
 PowerShell on Windows (note the absolute path):
@@ -126,7 +126,7 @@ PowerShell on Windows (note the absolute path):
 docker run --rm -d --name atlas-schema-extractor `
   -p 127.0.0.1:8091:8081 `
   -v C:\path\to\db2jcc4.jar:/opt/schemacrawler/lib/db2jcc4.jar:ro `
-  ghcr.io/itera/atlas-schema-extractor:1.2.0
+  ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 ```
 
 Then crawl with `db_type: "db2"`:
@@ -174,7 +174,7 @@ need it permanently baked in (e.g., for an internal corporate registry of
 the image), build a small downstream image:
 
 ```dockerfile
-FROM ghcr.io/itera/atlas-schema-extractor:1.2.0
+FROM ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
 COPY db2jcc4.jar /opt/schemacrawler/lib/db2jcc4.jar
 ```
 
@@ -187,7 +187,7 @@ JDBC driver's own licence.
 
 ### `POST /crawl`
 
-Run a schema crawl. Returns the full Atlas-canonical catalog (`atlas-schema-fidelity-v1.2`).
+Run a schema crawl. Returns the full Atlas-canonical catalog (`atlas-schema-fidelity-v1.3`).
 
 **Request body:**
 
@@ -216,7 +216,7 @@ Run a schema crawl. Returns the full Atlas-canonical catalog (`atlas-schema-fide
   "tables_count": 142,
   "columns_count": 1287,
   "catalog": {
-    "schema_version": "atlas-schema-fidelity-v1.2",
+    "schema_version": "atlas-schema-fidelity-v1.3",
     "generated_at": "2026-05-20T14:30:00.000Z",
     "database": {
       "product": "PostgreSQL 15.17",
@@ -334,7 +334,7 @@ Without Compose, use `docker buildx` directly:
 ```bash
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
-  -t atlas-schema-extractor:1.2.0 \
+  -t atlas-schema-extractor:1.3.0 \
   .
 ```
 
@@ -383,11 +383,11 @@ have a `catalog.json` from this extractor, Atlas will:
   review workflow
 - Export a sign-off pack for governance review
 
-To start an evaluation, install Atlas Data Fabric from
-<https://www.itera.com/atlas>. The desktop app is available as a free
-Commercial Preview for ninety days. Production deployment, support, and
-customisation are available under a separate commercial agreement —
-<https://www.itera.com/en/contact>.
+To start an evaluation of the Atlas Data Fabric desktop app, contact
+Itera at <https://www.itera.com/en/contact>. It is available as a
+free Commercial Preview for ninety days. Production deployment,
+support, and customisation are available under a separate commercial
+agreement.
 
 ---
 

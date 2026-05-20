@@ -31,12 +31,12 @@ services:
       args:
         # Set to "true" to bake in the Databricks JDBC driver (~40 MB).
         BUILD_DATABRICKS: "false"
-    image: ghcr.io/itera/atlas-schema-extractor:1.2.0
+    image: ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
     container_name: atlas-schema-extractor
     ports:
       # Host-side port is configurable via EXTRACTOR_PORT (defaults to 8081).
-      # Use a different value when 8081 is already taken — e.g. the internal
-      # dev sidecar at infra/schemacrawler/ also binds 8081.
+      # Override (e.g. EXTRACTOR_PORT=8091) when port 8081 is already in use
+      # on your machine by another local service.
       - "127.0.0.1:${EXTRACTOR_PORT:-8081}:8081"
     restart: "no"
     healthcheck:
