@@ -16,6 +16,8 @@ Itera or any other third party.
 
 ## Quickstart
 
+### Linux / macOS / WSL (bash)
+
 ```bash
 # 1. Pull the image
 docker pull ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
@@ -63,6 +65,59 @@ jq '.counts' catalog.json
 docker stop atlas-extractor
 ```
 
+### Windows (PowerShell)
+
+```powershell
+# 1. Pull the image
+docker pull ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
+
+# 2. Run it (binds to localhost only by default)
+docker run --rm -d --name atlas-extractor `
+  -p 127.0.0.1:8081:8081 `
+  ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
+
+# If port 8081 is already taken on your host, pick another port:
+#   docker run --rm -d --name atlas-extractor `
+#     -p 127.0.0.1:8091:8081 `
+#     ghcr.io/carheart/schemacrawler-atlas-data-fabric:1.3.0
+# Then use http://127.0.0.1:8091 below.
+
+# 3. Wait a couple of seconds for it to start
+do { Start-Sleep -Seconds 1 } until (
+  try { Invoke-RestMethod http://127.0.0.1:8081/health -ErrorAction Stop; $true }
+  catch { $false }
+)
+
+# 4. Crawl your database
+$body = @{
+  db_type  = "postgresql"
+  host     = "your-db.example.com"
+  port     = 5432
+  database = "your_database"
+  user     = "readonly_user"
+  password = "your-password"
+  schemas  = "public"
+} | ConvertTo-Json
+
+$response = Invoke-RestMethod -Method Post `
+  -Uri http://127.0.0.1:8081/crawl `
+  -ContentType "application/json" `
+  -Body $body
+
+# 5. Sanity-check
+$response | Select-Object db_type, database, tables_count, columns_count
+# db_type      : postgresql
+# database     : your_database
+# tables_count : 142
+# columns_count: 1287
+
+# Save the catalog to disk (just the .catalog field — Atlas-importable)
+$response.catalog | ConvertTo-Json -Depth 100 | Set-Content catalog.json
+
+# 6. Stop the extractor
+docker stop atlas-extractor
+```
+
 Drop `catalog.json` into the Atlas desktop app via **Settings → Source
 Systems → Import Schema**. See [Importing into Atlas](#importing-into-atlas)
 below for details.
@@ -83,7 +138,8 @@ below for details.
 | Databricks Unity Catalog | `jdbc` | Databricks JDBC 3.3.2 (Apache-2.0) | **Opt-in** — build the image with `BUILD_DATABRICKS=true` to bundle it |
 | Generic JDBC | `jdbc` | (bring your own) | Pass `jdbc_url` and `jdbc_driver` explicitly; mount the driver JAR if needed |
 
-See `examples/` for working curl scripts per engine.
+See `examples/` for working scripts per engine — both `.sh` (bash) and
+`.ps1` (PowerShell) variants are provided.
 
 ### Using databases whose JDBC driver isn't redistributable (DB2 / Oracle)
 
