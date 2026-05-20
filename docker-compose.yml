@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Itera ASA
+#
+# Atlas Schema Extractor — standalone compose file.
+#
+# Usage:
+#   docker compose up                              # builds + runs (Compose v2.17+)
+#   docker compose up -d                           # detached
+#   docker compose build --build-arg BUILD_DATABRICKS=true   # with Databricks driver
+#   docker compose down                            # stop + remove
+#
+# After 'up', the REST API is available at http://127.0.0.1:8081
+#   POST /crawl   — extract a schema
+#   GET  /health  — liveness check
+#
+# If port 8081 is already in use on your host (e.g. you're also running
+# the internal dev sidecar), override the host port via env var:
+#   EXTRACTOR_PORT=8091 docker compose up        # bash / zsh
+#   $env:EXTRACTOR_PORT="8091"; docker compose up   # PowerShell
+#
+# By default the port is bound to 127.0.0.1 ONLY for safety. To expose
+# to other hosts on your network, change the ports line below to
+# "${EXTRACTOR_PORT:-8081}:8081" — but be aware that /crawl accepts
+# unauthenticated requests with database credentials in the body. Don't
+# expose this to anything beyond your trusted local network.
+
+services:
+  atlas-schema-extractor:
+    build:
+      context: .
+      args:
+        # Set to "true" to bake in the Databricks JDBC driver (~40 MB).
+        BUILD_DATABRICKS: "false"
+    image: ghcr.io/itera/atlas-schema-extractor:1.2.0
+    container_name: atlas-schema-extractor
+    ports:
+      # Host-side port is configurable via EXTRACTOR_PORT (defaults to 8081).
+      # Use a different value when 8081 is already taken — e.g. the internal
+      # dev sidecar at infra/schemacrawler/ also binds 8081.
+      - "127.0.0.1:${EXTRACTOR_PORT:-8081}:8081"
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Read-only root filesystem: SC writes only to /tmp (where it
+    # creates the per-crawl output file via tempfile.TemporaryDirectory)
+    # and to /opt/schemacrawler/logs (chowned to the atlas user). The
+    # rest of the filesystem can be read-only.
+    read_only: false   # set to true once you've verified logs/cache writes don't trip
+    security_opt:
+      - no-new-privileges:true

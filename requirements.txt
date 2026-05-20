@@ -1,0 +1,34 @@
+# Atlas SchemaCrawler sidecar — fully-pinned dependency closure.
+# Direct deps (bumped 2026-05-13 for CVE patches):
+#   fastapi==0.136.1       (was 0.111.0; clears 2 starlette CVEs transitively)
+#   uvicorn[standard]==0.46.0  (was 0.29.0)
+#   pydantic==2.13.4       (was 2.7.1)
+#
+# Cleared by upgrade (no longer in transitive closure):
+#   python-multipart       (was 0.0.9 — 4 CVEs incl. CVSS 8.7); not needed (no file uploads)
+#   orjson                 (was 3.9.9 — CVSS 7.5/7.7); not imported
+#   ujson                  (was 5.9.0 — CVSS 8.7/7.5/7.5); not imported
+#   starlette 0.37.2       (CVSS 8.7); now starlette 1.0.0 via fastapi 0.136
+#
+# All transitive deps below pinned via:
+#   python3 -m venv .venv && .venv/bin/pip install <direct deps> && .venv/bin/pip freeze
+# To upgrade, re-run the freeze in a clean venv and commit the result.
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.13.0
+click==8.3.3
+fastapi==0.136.1
+h11==0.16.0
+httptools==0.7.1
+idna==3.15
+pydantic==2.13.4
+pydantic_core==2.46.4
+python-dotenv==1.2.2
+PyYAML==6.0.3
+starlette==1.0.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+uvicorn[standard]==0.46.0
+uvloop==0.22.1
+watchfiles==1.1.1
+websockets==16.0

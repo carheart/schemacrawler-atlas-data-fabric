@@ -1,0 +1,27 @@
+Atlas Schema Extractor
+Copyright 2026 Itera ASA (https://www.itera.com/)
+
+This product includes software developed at Itera ASA, licensed under the
+Apache License, Version 2.0 (the "License"). You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0.
+
+This product bundles third-party software components, each governed by its
+own license. A full list of bundled components, their versions, license
+identifiers, and source URLs is available in THIRD_PARTY_LICENSES.md, also
+baked into the image at /licenses/THIRD_PARTY_LICENSES.md.
+
+Notable bundled components:
+  - SchemaCrawler (Apache-2.0) — https://www.schemacrawler.com/
+  - GraalVM JavaScript runtime (Universal Permissive License / GFTC)
+  - PostgreSQL JDBC Driver (BSD-2-Clause)
+  - MariaDB Connector/J (LGPL-2.1) — handles both MySQL and MariaDB
+  - Microsoft JDBC Driver for SQL Server (MIT)
+  - OpenJDK JRE (GPL-2.0 with Classpath Exception, via Debian)
+  - FastAPI, uvicorn, pydantic, and their transitive Python dependencies
+    (MIT / BSD-3-Clause / Apache-2.0)
+
+SchemaCrawler is a trademark of Sualeh Fatehi. This product is not affiliated
+with or endorsed by the SchemaCrawler project; it bundles and invokes the
+SchemaCrawler binary distribution per its Apache-2.0 license.
+
+Atlas Data Fabric is a trademark of Itera ASA.

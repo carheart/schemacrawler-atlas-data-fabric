@@ -1,0 +1,17 @@
+# Build-context hygiene. Nothing here ends up in the image; .dockerignore
+# is purely a build-time filter for what gets sent to the Docker daemon.
+.git
+.gitignore
+.DS_Store
+*.swp
+*.swo
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+README.md
+docker-compose.yml
+docker-compose.dev.yml
+.github/
+examples/
